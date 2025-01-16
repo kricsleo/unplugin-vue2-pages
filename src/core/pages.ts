@@ -15,34 +15,62 @@ export async function pagesToRoutes(options: NormalizedOptions): Promise<Route[]
     for (const file of files) {
       // => /src/pages/about/users.[userId].vue
       const component = withLeadingSlash(p.join(page.dir, file))
+
       // => [about, user/:userId]
       const routePaths = filePathToRoutePaths(file)
+      let root = routes
 
-      let rootRoots = routes
       for (let idx = 0; idx < routePaths.length; idx++) {
         const isFirstRoute = idx === 0
         const isLastRoute = idx === routePaths.length - 1
         const routePath = isFirstRoute ? page.base + routePaths[idx]! : routePaths[idx]!
 
-        const samePrefixRoute = rootRoots.find(route => route.path === routePath)
+        const samePrefixRoute = root.find(route => route.path === routePath)
 
         if (samePrefixRoute) {
           samePrefixRoute.children ||= []
-          rootRoots = samePrefixRoute.children
+          root = samePrefixRoute.children
         }
 
         if (isLastRoute) {
-          rootRoots.push({ path: routePath, component })
+          root.push({ path: routePath, component })
         } else {
           const children: Route[] = []
-          rootRoots.push({ path: routePath, children })
-          rootRoots = children
+          root.push({ path: routePath, children })
+          root = children
         }
       }
     }
   }
 
+  return sortRoutes(routes)
+}
+
+function sortRoutes(routes: Route[]): Route[] {
   return routes
+    .sort(sortRoutePath)
+    .map(route => route.children?.length
+      ? ({ ...route, children: sortRoutes(route.children) })
+      : route,
+    )
+}
+
+function sortRoutePath(routeA: Route, routeB: Route): number {
+  // Priority 1: static > dynamic > glob
+  const typeA = routeType(routeA)
+  const typeB = routeType(routeB)
+  if (typeA !== typeB) {
+    return typeB - typeA
+  }
+
+  // Priority 2: length desc
+  return routeB.path.length - routeA.path.length
+
+  function routeType(route: Route): number {
+    return route.path.includes('*') ? 0
+      : route.path.includes(':') ? 1
+        : 2
+  }
 }
 
 function filePathToRoutePaths(filePath: string): string[] {

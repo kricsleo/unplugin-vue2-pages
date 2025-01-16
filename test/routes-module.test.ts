@@ -6,6 +6,6 @@ describe('routes-module', () => {
   it('generate routes module', async () => {
     const code = await genRoutesModule(normalizedOptions)
 
-    expect(code).toMatchFileSnapshot('./snapshots/auto-routes.js')
+    await expect(code).toMatchFileSnapshot('./snapshots/auto-routes.js')
   })
 })

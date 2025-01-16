@@ -4,6 +4,7 @@ import { normalizedOptions } from './fixtures/options'
 
 describe('files to routes', () => {
   it('files to routes', async () => {
-    expect(await pagesToRoutes(normalizedOptions)).toMatchFileSnapshot('./snapshots/routes.js')
+    const routes = await pagesToRoutes(normalizedOptions)
+    await expect(routes).toMatchFileSnapshot('./snapshots/routes.js')
   })
 })

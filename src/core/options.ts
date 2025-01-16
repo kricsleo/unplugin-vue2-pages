@@ -1,4 +1,5 @@
 import type { NormalizedOptions, Options, PageOptions, Pages } from '../types'
+import { withLeadingSlash } from './utils'
 
 export function normalizeOptions(options?: Options): NormalizedOptions {
   const pages = normalizePages(options?.pages)
@@ -14,7 +15,7 @@ function normalizePages(_pages?: Pages): Required<PageOptions>[] {
     if (typeof page === 'string') {
       return { dir: page, base: '/', exclude: [] }
     }
-    const base = page.base || '/'
+    const base = withLeadingSlash(page.base || '/')
     const exclude = page.exclude || []
     return { ...page, base, exclude }
   })

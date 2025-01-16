@@ -8,6 +8,7 @@ export default eslint({
     'style/brace-style': ['error', '1tbs', {
       allowSingleLine: false,
     }],
+    'style/multiline-ternary': 'off',
   },
   ignores: [
     'test/snapshots',
