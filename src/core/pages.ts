@@ -1,7 +1,7 @@
 import type { NormalizedOptions, Route } from '../types'
 import p from 'node:path'
 import { glob } from 'tinyglobby'
-import { withLeadingSlash } from './utils'
+import { trimSlash, withLeadingSlash } from './utils'
 
 export async function pagesToRoutes(options: NormalizedOptions): Promise<Route[]> {
   const routes: Route[] = []
@@ -23,13 +23,16 @@ export async function pagesToRoutes(options: NormalizedOptions): Promise<Route[]
       for (let idx = 0; idx < routePaths.length; idx++) {
         const isFirstRoute = idx === 0
         const isLastRoute = idx === routePaths.length - 1
-        const routePath = isFirstRoute ? page.base + routePaths[idx]! : routePaths[idx]!
+
+        const routePath = isFirstRoute
+          ? withLeadingSlash(trimSlash(page.base + routePaths[idx]!))
+          : trimSlash(routePaths[idx]!)
 
         const samePrefixRoute = root.find(route => route.path === routePath)
-
         if (samePrefixRoute) {
           samePrefixRoute.children ||= []
           root = samePrefixRoute.children
+          continue
         }
 
         if (isLastRoute) {
@@ -44,6 +47,34 @@ export async function pagesToRoutes(options: NormalizedOptions): Promise<Route[]
   }
 
   return sortRoutes(routes)
+}
+
+function filePathToRoutePaths(filePath: string): string[] {
+  // => about/users.[userId]
+  const path = filePath.slice(0, filePath.length - p.extname(filePath).length)
+
+  return path
+  // => [about, user.[userId]]
+    .split('/')
+  // => [about, user/:userId]
+    .map(part => part
+      .split(/(?<!\.)\.(?!\.)/)
+      .map(fileNameToRoutePath)
+      .join('/'),
+    )
+}
+
+function fileNameToRoutePath(fileName: string): string {
+  if (fileName === 'index') {
+    return ''
+  }
+  if (fileName.startsWith('[...') && fileName.endsWith(']')) {
+    return '*'
+  }
+  if (fileName.startsWith('[') && fileName.endsWith(']')) {
+    return `:${fileName.slice(1, -1)}`
+  }
+  return fileName
 }
 
 function sortRoutes(routes: Route[]): Route[] {
@@ -71,28 +102,4 @@ function sortRoutePath(routeA: Route, routeB: Route): number {
       : route.path.includes(':') ? 1
         : 2
   }
-}
-
-function filePathToRoutePaths(filePath: string): string[] {
-  // => about/users.[userId]
-  const path = filePath.slice(0, filePath.length - p.extname(filePath).length)
-
-  return path
-  // => [about, user.[userId]]
-    .split('/')
-  // => [about, user/:userId]
-    .map(part => part.split(/(?<!\.)\.(?!\.)/).map(fileNameToRoutePath).join('/'))
-}
-
-function fileNameToRoutePath(fileName: string): string {
-  if (fileName === 'index') {
-    return ''
-  }
-  if (fileName.startsWith('[...') && fileName.endsWith(']')) {
-    return '*'
-  }
-  if (fileName.startsWith('[') && fileName.endsWith(']')) {
-    return `:${fileName.slice(1, -1)}`
-  }
-  return fileName
 }
