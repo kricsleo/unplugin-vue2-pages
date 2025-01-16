@@ -1,0 +1,147 @@
+{
+  "name": "unplugin-vue2-pages",
+  "type": "module",
+  "version": "0.0.1",
+  "packageManager": "pnpm@9.15.4",
+  "description": "File-based routing plugin for Vue 2",
+  "license": "MIT",
+  "homepage": "https://github.com/kricsleo/unplugin-vue2-pages#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kricsleo/unplugin-vue2-pages.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kricsleo/unplugin-vue2-pages/issues"
+  },
+  "keywords": [
+    "unplugin",
+    "vite",
+    "webpack",
+    "rollup",
+    "transform",
+    "file-based",
+    "routing"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./astro": {
+      "import": "./dist/astro.mjs",
+      "require": "./dist/astro.cjs"
+    },
+    "./rspack": {
+      "import": "./dist/rspack.mjs",
+      "require": "./dist/rspack.cjs"
+    },
+    "./vite": {
+      "import": "./dist/vite.mjs",
+      "require": "./dist/vite.cjs"
+    },
+    "./webpack": {
+      "import": "./dist/webpack.mjs",
+      "require": "./dist/webpack.cjs"
+    },
+    "./rollup": {
+      "import": "./dist/rollup.mjs",
+      "require": "./dist/rollup.cjs"
+    },
+    "./esbuild": {
+      "import": "./dist/esbuild.mjs",
+      "require": "./dist/esbuild.cjs"
+    },
+    "./nuxt": {
+      "import": "./dist/nuxt.mjs",
+      "require": "./dist/nuxt.cjs"
+    },
+    "./farm": {
+      "import": "./dist/farm.mjs",
+      "require": "./dist/farm.cjs"
+    },
+    "./types": {
+      "import": "./dist/types.mjs",
+      "require": "./dist/types.cjs"
+    },
+    "./auto-routes": {
+      "types": "./auto-routes.d.ts"
+    },
+    "./*": "./*"
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*",
+        "./*"
+      ]
+    }
+  },
+  "files": [
+    "auto-routes.d.ts",
+    "dist"
+  ],
+  "scripts": {
+    "build": "unbuild",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "prepublishOnly": "npm run build",
+    "release": "bumpp && npm publish",
+    "test": "vitest",
+    "test:u": "vitest -u"
+  },
+  "peerDependencies": {
+    "@farmfe/core": ">=1",
+    "@nuxt/kit": "^3",
+    "@nuxt/schema": "^3",
+    "esbuild": "*",
+    "rollup": "^3",
+    "vite": ">=3",
+    "vue-router": "^3",
+    "webpack": "^4 || ^5"
+  },
+  "peerDependenciesMeta": {
+    "@farmfe/core": {
+      "optional": true
+    },
+    "@nuxt/kit": {
+      "optional": true
+    },
+    "@nuxt/schema": {
+      "optional": true
+    },
+    "esbuild": {
+      "optional": true
+    },
+    "rollup": {
+      "optional": true
+    },
+    "vite": {
+      "optional": true
+    },
+    "vue-router": {
+      "optional": true
+    },
+    "webpack": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "magic-string": "^0.30.17",
+    "tinyglobby": "^0.2.10",
+    "unplugin": "^1.16.1"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^3.14.0",
+    "@nuxt/kit": "^3.15.2",
+    "@nuxt/schema": "^3.15.2",
+    "@types/node": "^22.10.7",
+    "bumpp": "^9.10.1",
+    "eslint": "^9.18.0",
+    "typescript": "^5.7.3",
+    "unbuild": "^3.3.1",
+    "vitest": "^2.1.8"
+  }
+}
