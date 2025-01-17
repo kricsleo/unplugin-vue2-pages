@@ -104,7 +104,6 @@ Generated routes:
 
 ```html
 <!-- users/[userId].vue -->
-
 <script setup lang="ts">
 definePage({
   meta: { auth: true }
