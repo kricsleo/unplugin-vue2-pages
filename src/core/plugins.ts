@@ -1,12 +1,12 @@
 import type { UnpluginOptions } from 'unplugin'
-
 import type { NormalizedOptions } from '../types'
-import MagicString from 'magic-string'
+import p from 'node:path'
 import { name } from '../../package.json'
 import { genRoutesModule } from './codegen'
+import { definePageTransform } from './definePage'
+import { withTrailingSlash } from './utils'
 
 const VIRTUAL_ROUTES_MODULE = `${name}/auto-routes`
-const ROUTE_BLOCK_QUERY = '?vue&type=route'
 
 export function createVirtualRoutesModulePlugin(options: NormalizedOptions): UnpluginOptions {
   return {
@@ -23,26 +23,16 @@ export function createVirtualRoutesModulePlugin(options: NormalizedOptions): Unp
   }
 }
 
-export function createPageRouteBlockPlugin(options: NormalizedOptions): UnpluginOptions {
+export function createDefinePagePlugin(options: NormalizedOptions): UnpluginOptions {
+  const dirs = options.pages.map(page => withTrailingSlash(p.resolve(page.dir)))
+
   return {
-    name: `${name}:page-route-block`,
+    name: `${name}:define-page`,
     transformInclude(id) {
-      return id.includes(ROUTE_BLOCK_QUERY)
-        && options.pages.some(page => id.includes(page.dir))
+      const inDir = dirs.some(dir => id.startsWith(dir))
+      const isVue = id.includes('.vue')
+      return inDir && isVue
     },
-    transform(code) {
-      if (code) {
-        const s = new MagicString(code)
-
-        // todo: support it or not?
-        s.append(`\n\n;function definePage(t){return t};\n`)
-
-        return {
-          code: s.toString(),
-          map: s.generateMap(),
-        }
-      }
-      return 'export default {}'
-    },
+    transform: definePageTransform,
   }
 }

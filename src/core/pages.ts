@@ -36,7 +36,8 @@ export async function pagesToRoutes(options: NormalizedOptions): Promise<Route[]
         }
 
         if (isLastRoute) {
-          root.push({ path: routePath, component })
+          const route = { path: routePath, component }
+          root.push(page.extendRoute(route))
         } else {
           const children: Route[] = []
           root.push({ path: routePath, children })

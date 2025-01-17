@@ -7,8 +7,8 @@ export default defineConfig({
   plugins: [
     pages({
       pages: [
-        { dir: 'fixtures/unprefix' },
-        { dir: 'fixtures/prefix', base: '/prefix' },
+        { dir: 'fixtures/unprefix', extendRoute: route => ({ ...route, meta: { layout: 'unprefix' } }) },
+        { dir: 'fixtures/prefix', base: '/prefix', extendRoute: route => ({ ...route, meta: { layout: 'prefix' } }) },
       ],
     }),
     inspect(),

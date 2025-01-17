@@ -29,9 +29,14 @@ export interface PageOptions {
   /**
    * Exclude files from this dir, support glob patterns.
    *
-   * E.g. '/componen/**'
+   * E.g. 'componen/**'
    */
   exclude?: string | string[]
+
+  /**
+   * Extend a route before generate.
+   */
+  extendRoute?: (route: Route) => Route
 }
 
 export interface Route {

@@ -30,7 +30,7 @@ function genRoute(route: Route, imports: string[], indent = 0): string {
 
   if (route.component) {
     // TODO: the query suffix?
-    imports.push(`import ${routeImport} from '${route.component}?vue&type=route'`)
+    imports.push(`import ${routeImport} from '${route.component}?definePage&vue'`)
     push(`  component: () => import('${route.component}'),`)
   }
 

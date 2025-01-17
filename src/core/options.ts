@@ -1,4 +1,4 @@
-import type { NormalizedOptions, Options, PageOptions, Pages } from '../types'
+import type { NormalizedOptions, Options, PageOptions, Pages, Route } from '../types'
 import { withLeadingSlash } from './utils'
 
 export function normalizeOptions(options?: Options): NormalizedOptions {
@@ -13,10 +13,15 @@ function normalizePages(_pages?: Pages): Required<PageOptions>[] {
 
   return pageArr.map((page) => {
     if (typeof page === 'string') {
-      return { dir: page, base: '/', exclude: [] }
+      return { dir: page, base: '/', exclude: [], extendRoute: defaultExtendRoute }
     }
     const base = withLeadingSlash(page.base || '/')
     const exclude = page.exclude || []
-    return { ...page, base, exclude }
+    const extendRoute = page.extendRoute || defaultExtendRoute
+    return { ...page, base, exclude, extendRoute }
   })
+}
+
+function defaultExtendRoute(route: Route): Route {
+  return route
 }
