@@ -63,8 +63,11 @@
       "import": "./dist/types.mjs",
       "require": "./dist/types.cjs"
     },
-    "./auto-routes": {
-      "types": "./auto-routes.d.ts"
+    "./global": {
+      "types": "./global.d.ts"
+    },
+    "./client": {
+      "types": "./client.d.ts"
     },
     "./*": "./*"
   },
@@ -80,8 +83,9 @@
     }
   },
   "files": [
-    "auto-routes.d.ts",
-    "dist"
+    "client.d.ts",
+    "dist",
+    "global.d.ts"
   ],
   "scripts": {
     "build": "unbuild",
@@ -129,21 +133,21 @@
     }
   },
   "dependencies": {
+    "@babel/types": "^7.26.5",
+    "@vue-macros/common": "^1.15.1",
+    "ast-walker-scope": "^0.6.2",
     "magic-string": "^0.30.17",
+    "mlly": "^1.7.4",
     "tinyglobby": "^0.2.10",
     "unplugin": "^1.16.1"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^3.14.0",
-    "@babel/types": "^7.26.5",
     "@nuxt/kit": "^3.15.2",
     "@nuxt/schema": "^3.15.2",
     "@types/node": "^22.10.7",
-    "@vue-macros/common": "^1.15.1",
-    "ast-walker-scope": "^0.6.2",
     "bumpp": "^9.10.1",
     "eslint": "^9.18.0",
-    "mlly": "^1.7.4",
     "typescript": "^5.7.3",
     "unbuild": "^3.3.1",
     "vitest": "^2.1.8"
