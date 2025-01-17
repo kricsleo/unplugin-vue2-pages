@@ -34,7 +34,6 @@ Example: [`playground/`](./playground/)
 import pages from 'unplugin-vue2-pages/webpack'
 
 module.exports = {
-  /* ... */
   plugins: [
     pages({ /* options */ })
   ]
@@ -43,19 +42,7 @@ module.exports = {
 
 <br></details>
 
-Add the declaration to the `tsconfig.json` to enable intellisense for `definePage` usage.
-
-```json
-{
-  "compilerOptions": {
-    "types": [
-      "unplugin-vue2-pages/global"
-    ]
-  }
-}
-```
-
-Import auto-generated routes from this plugin.
+Then import auto-generated routes from this plugin.
 
 ```ts
 /// <reference types="unplugin-vue2-pages/client" />
@@ -74,11 +61,11 @@ File structure:
 src/pages/
 ├── index.vue
 ├── about.vue
-├── posts.[postId].author.vue
+├── posts.[postId].comments.vue
 ├── [...all].vue
 └── users/
     ├── index.vue
-    ├── [userId].profile.vue
+    ├── [userId].settings.vue
     └── [...all].vue
 ```
 
@@ -88,18 +75,20 @@ Generated routes:
 [
   { path: '/', component: () => import('/src/pages/index.vue') },
   { path: '/about', component: () => import('/src/pages/about.vue') },
-  { path: '/posts/:postId/author', component: () => import('/src/pages/posts.[postId].author.vue') },
+  { path: '/posts/:postId/comments', component: () => import('/src/pages/posts.[postId].comments.vue') },
   { path: '*', component: () => import('/src/pages/[...all].vue') },
   {
     path: '/users',
     children: [
       { path: '', component: () => import('/src/pages/users/index.vue') },
-      { path: ':userId/profile', component: () => import('/src/pages/users/[userId].profile.vue') },
+      { path: ':userId/settings', component: () => import('/src/pages/users/[userId].settings.vue') },
       { path: '*', component: () => import('/src/pages/users/[...all].vue') },
     ]
   },
 ]
 ```
+
+- `static`: represents static path → `static`
 
 - `[dynamic]`: represents dynamic path → `:dynamic`
 
@@ -111,16 +100,30 @@ Generated routes:
 
 ## DefinePage
 
-`definePage` is a compile-macro, you can define route config in this function.
-
-Same as [unplugin-vue-router: definePage()](https://uvr.esm.is/guide/extending-routes.html#definepage)
+`definePage()` is a compile-time macro, you can define extra route config for current page.
 
 ```vue
+<!-- users/[userId].vue -->
+
 <script setup lang="ts">
 definePage({
   meta: { auth: true }
 })
 </script>
+```
+
+Same as [unplugin-vue-router: definePage()](https://uvr.esm.is/guide/extending-routes.html#definepage)
+
+For typescript support, add this declaration to `tsconfig.json`.
+
+```json
+{
+  "compilerOptions": {
+    "types": [
+      "unplugin-vue2-pages/global"
+    ]
+  }
+}
 ```
 
 ## Options
@@ -164,7 +167,7 @@ export interface PageOptions {
   /**
    * Extend a route before generate.
    */
-  extendRoute?: (route: Route) => Route
+  extendRoute?: (route: Route) => void
 }
 ```
 
