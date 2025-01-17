@@ -102,7 +102,7 @@ Generated routes:
 
 `definePage()` is a compile-time macro, you can define extra route config for current page.
 
-```vue
+```html
 <!-- users/[userId].vue -->
 
 <script setup lang="ts">
